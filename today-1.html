@@ -13,7 +13,6 @@
       font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       height: 100vh;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
       overflow: hidden;
@@ -40,30 +39,6 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 560px; /* ensures you see space even before it loads */
-    }
-
-    /* Keep TikTok embed nicely sized and centered */
-    .video-frame blockquote.tiktok-embed {
-      width: 100%;
-      max-width: 480px;
-      margin: 0 !important;
-    }
-
-    .fallback {
-      color: #aaa;
-      font-size: 0.95rem;
-      text-align: center;
-      line-height: 1.4;
-      margin-top: 0.75rem;
-      max-width: 420px;
-    }
-
-    .fallback a {
-      color: #fff;
-      text-decoration: none;
-      border-bottom: 1px solid #444;
-      padding-bottom: 2px;
     }
 
     .nav {
@@ -71,66 +46,3 @@
     }
 
     .nav a {
-      color: #fff;
-      text-decoration: none;
-      border: 1px solid #444;
-      padding: 0.6rem 1.2rem;
-      border-radius: 999px;
-      font-size: 0.95rem;
-    }
-
-    .nav a:hover {
-      border-color: #666;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="container">
-
-    <div class="progress">1 of 7</div>
-
-    <div class="video-frame">
-      <!-- Full TikTok embed markup (more reliable than an empty blockquote) -->
-      <blockquote
-        class="tiktok-embed"
-        cite="https://www.tiktok.com/@tik_tok_bhadie/video/7564167851112795405"
-        data-video-id="7564167851112795405"
-        style="max-width: 480px; min-width: 280px;">
-
-        <section>
-          <a target="_blank" title="@tik_tok_bhadie"
-             href="https://www.tiktok.com/@tik_tok_bhadie?refer=embed">
-            @tik_tok_bhadie
-          </a>
-          You can’t have your cake and eat it too 🎂👮🏽‍♂️
-          <a target="_blank" title="♬ original sound - grantbeans"
-             href="https://www.tiktok.com/music/original-sound-7564167926161476365?refer=embed">
-            ♬ original sound - grantbeans
-          </a>
-        </section>
-
-      </blockquote>
-    </div>
-
-    <!-- Fallback if TikTok is blocked by the browser -->
-    <div class="fallback">
-      If the video is blank, your browser may be blocking TikTok embeds.<br/>
-      <a href="https://www.tiktok.com/@tik_tok_bhadie/video/7564167851112795405" target="_blank">
-        Open this video on TikTok ↗
-      </a>
-      <br/><br/>
-      In Firefox, click the shield icon and turn off Tracking Protection for this site.
-    </div>
-
-    <div class="nav">
-      <a href="today-2.html">Next →</a>
-    </div>
-
-  </div>
-
-  <!-- TikTok script: must be present for embeds -->
-  <script async src="https://www.tiktok.com/embed.js"></script>
-
-</body>
-</html>
