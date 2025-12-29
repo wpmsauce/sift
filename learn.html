@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Learn — SIFT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Same headline font as homepage -->
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #d8e9ff;
+
+      --music: #c4dbff;
+      --maths: #b7d0ff;
+      --science: #bfe6e1;
+      --history: #ffe6b8;
+      --geography: #d7f0c6;
+      --culture: #e6d8ff;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1f2a3a;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      padding: 2.5rem 1.5rem;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    h1 {
+      font-family: "Fraunces", serif;
+      font-size: 2.1rem;
+      font-weight: 500;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: #405a7a;
+      margin-bottom: 2.5rem;
+    }
+
+    .topics {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+
+    .topic {
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: #1f2a3a;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .topic:hover {
+      box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+    }
+
+    .topic:active {
+      transform: scale(0.96);
+    }
+
+    .music { background: var(--music); }
+    .maths { background: var(--maths); }
+    .science { background: var(--science); }
+    .history { background: var(--history); }
+    .geography { background: var(--geography); }
+    .culture { background: var(--culture); }
+
+    .back {
+      display: inline-block;
+      margin-top: 3rem;
+      font-size: 0.9rem;
+      color: #405a7a;
+      text-decoration: none;
+    }
+
+    .back:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <h1>What would you like to learn?</h1>
+    <div class="subtitle">
+      One small thing. No pressure.
+    </div>
+
+    <div class="topics">
+      <a class="topic music" href="learn-music.html">Music</a>
+      <a class="topic maths" href="learn-maths.html">Maths</a>
+      <a class="topic science" href="learn-science.html">Science</a>
+      <a class="topic history" href="learn-history.html">History</a>
+      <a class="topic geography" href="learn-geography.html">Geography</a>
+      <a class="topic culture" href="learn-culture.html">Culture</a>
+    </div>
+
+    <a class="back" href="index.html">← Back</a>
+
+  </div>
+
+</body>
+</html>
