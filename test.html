@@ -35,7 +35,6 @@
       overflow: hidden;
     }
 
-    /* App frame */
     .app {
       width: 100%;
       max-width: 520px;
@@ -55,13 +54,13 @@
     h1 { font-size: 2.2rem; margin-bottom: 2.75rem; }
     h2 { font-size: 2.1rem; margin-bottom: 0.75rem; }
 
-    .subtitle {
-      font-size: 1rem;
-      color: #405a7a;
-      margin: 0 0 2.5rem;
+    footer {
+      margin-top: 3.2rem;
+      font-size: 0.85rem;
+      color: var(--muted);
     }
 
-    /* Home choices */
+    /* HOME BUTTONS */
     .choices {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -101,13 +100,68 @@
       font-size: 1.05rem;
     }
 
-    footer {
-      margin-top: 3.2rem;
-      font-size: 0.85rem;
-      color: var(--muted);
+    /* SCREENS */
+    .screen {
+      position: absolute;
+      inset: 0;
+      padding: 2.5rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity 220ms ease, transform 220ms ease;
     }
 
-    /* Learn topics */
+    .screen.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .inner {
+      width: 100%;
+      max-width: 520px;
+      text-align: center;
+    }
+
+    /* LEARN SCREEN */
+    .learn-bg {
+      background: var(--learn);
+      position: fixed;
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 220ms ease;
+      z-index: 1;
+    }
+    .learn-bg.active {
+      opacity: 1;
+    }
+
+    /* This is the “landing spot” for the morph */
+    .learn-header-spot {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+
+    /* A soft pill behind the header (the morph will land on this) */
+    .learn-header-pill {
+      width: min(420px, 100%);
+      height: 84px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.35);
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: #405a7a;
+      margin: 0 0 2.5rem;
+    }
+
     .topics {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -128,7 +182,6 @@
       transition: transform 0.15s ease, box-shadow 0.15s ease;
       -webkit-tap-highlight-color: transparent;
     }
-
     .topic:hover { box-shadow: 0 10px 28px rgba(0,0,0,0.08); }
     .topic:active { transform: scale(0.96); }
 
@@ -141,83 +194,72 @@
     }
     .back:hover { text-decoration: underline; }
 
-    /* SPA screen transitions */
-    .screen {
-      position: absolute;
-      inset: 0;
-      padding: 2.5rem 1.5rem;
+    /* During morph animation, avoid accidental taps */
+    .busy {
+      pointer-events: none;
+    }
+
+    /* The floating clone */
+    .ghost {
+      position: fixed;
+      z-index: 9999;
       display: flex;
       align-items: center;
       justify-content: center;
-      opacity: 0;
-      transform: translateY(10px);
-      pointer-events: none;
-      transition: opacity 240ms ease, transform 240ms ease;
-    }
-    .screen.active {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-
-    /* Background color per route (smoothly) */
-    body.route-home { background: var(--bg); transition: background 240ms ease; }
-    body.route-learn { background: var(--learn); transition: background 240ms ease; }
-
-    /* inner containers inside screens */
-    .inner {
-      width: 100%;
-      max-width: 520px;
-      text-align: center;
+      color: var(--ink);
+      font-weight: 500;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+      will-change: transform, width, height, border-radius;
     }
   </style>
 </head>
-<body class="route-home">
 
-  <div class="app">
+<body>
 
-    <!-- HOME SCREEN -->
-    <section id="screen-home" class="screen active" aria-hidden="false">
+  <!-- Background wash for Learn -->
+  <div class="learn-bg" id="learnBg"></div>
+
+  <div class="app" id="app">
+
+    <!-- HOME -->
+    <section id="home" class="screen active" aria-hidden="false" style="z-index:2;">
       <div class="inner">
         <h1>What would you like to do?</h1>
 
         <div class="choices">
-          <button class="choice learn" data-route="/learn">Learn</button>
-          <button class="choice relax" data-route="/relax">Relax</button>
-          <button class="choice laugh" data-route="/laugh">Laugh</button>
-          <button class="choice wow" data-route="/wow">Be wowed</button>
-          <button class="choice surprise" data-route="/surprise">Surprise me</button>
+          <button class="choice learn" data-open="learn" data-color="#d8e9ff">Learn</button>
+          <button class="choice relax" disabled style="opacity:.55;">Relax</button>
+          <button class="choice laugh" disabled style="opacity:.55;">Laugh</button>
+          <button class="choice wow" disabled style="opacity:.55;">Be wowed</button>
+          <button class="choice surprise" disabled style="opacity:.55;">Surprise me</button>
         </div>
 
         <footer>A few good things. Then you’re done.</footer>
       </div>
     </section>
 
-    <!-- LEARN SCREEN -->
-    <section id="screen-learn" class="screen" aria-hidden="true">
+    <!-- LEARN -->
+    <section id="learn" class="screen" aria-hidden="true" style="z-index:3;">
       <div class="inner">
+
+        <!-- This pill is the “target” for the morph -->
+        <div class="learn-header-spot">
+          <div class="learn-header-pill" id="learnHeaderPill"></div>
+        </div>
+
         <h2>What would you like to learn?</h2>
         <p class="subtitle">One small thing. No pressure.</p>
 
         <div class="topics">
-          <a class="topic" href="#" data-topic="music">Music</a>
-          <a class="topic" href="#" data-topic="maths">Maths</a>
-          <a class="topic" href="#" data-topic="science">Science</a>
-          <a class="topic" href="#" data-topic="history">History</a>
-          <a class="topic" href="#" data-topic="geography">Geography</a>
-          <a class="topic" href="#" data-topic="design">Design</a>
+          <a class="topic" href="#">Music</a>
+          <a class="topic" href="#">Maths</a>
+          <a class="topic" href="#">Science</a>
+          <a class="topic" href="#">History</a>
+          <a class="topic" href="#">Geography</a>
+          <a class="topic" href="#">Design</a>
         </div>
 
-        <a class="back" href="#" data-route="/">← Back</a>
-      </div>
-    </section>
-
-    <!-- Placeholder screens so buttons don’t 404 -->
-    <section id="screen-placeholder" class="screen" aria-hidden="true">
-      <div class="inner">
-        <h2>Coming soon</h2>
-        <p class="subtitle">This section isn’t built yet.</p>
-        <a class="back" href="#" data-route="/">← Back</a>
+        <a class="back" href="#" data-back>← Back</a>
       </div>
     </section>
 
@@ -225,59 +267,117 @@
 
   <script>
     (function () {
-      const screens = {
-        "/": document.getElementById("screen-home"),
-        "/learn": document.getElementById("screen-learn"),
-        "/relax": document.getElementById("screen-placeholder"),
-        "/laugh": document.getElementById("screen-placeholder"),
-        "/wow": document.getElementById("screen-placeholder"),
-        "/surprise": document.getElementById("screen-placeholder"),
-      };
+      const app = document.getElementById("app");
+      const home = document.getElementById("home");
+      const learn = document.getElementById("learn");
+      const learnBg = document.getElementById("learnBg");
+      const learnHeaderPill = document.getElementById("learnHeaderPill");
 
-      function setBodyRouteClass(path) {
-        document.body.classList.remove("route-home", "route-learn");
-        if (path === "/learn") document.body.classList.add("route-learn");
-        else document.body.classList.add("route-home");
+      function showLearn() {
+        home.classList.remove("active");
+        home.setAttribute("aria-hidden", "true");
+        learn.classList.add("active");
+        learn.setAttribute("aria-hidden", "false");
       }
 
-      function show(path, { push = false } = {}) {
-        const target = screens[path] || screens["/"];
-        const finalPath = screens[path] ? path : "/";
+      function showHome() {
+        learn.classList.remove("active");
+        learn.setAttribute("aria-hidden", "true");
+        home.classList.add("active");
+        home.setAttribute("aria-hidden", "false");
+      }
 
-        // update URL (no reload)
-        if (push) history.pushState({ path: finalPath }, "", finalPath);
+      function morphButtonToLearnHeader(btn) {
+        app.classList.add("busy");
 
-        // switch body background theme
-        setBodyRouteClass(finalPath);
+        // Create ghost clone
+        const rect = btn.getBoundingClientRect();
+        const ghost = btn.cloneNode(true);
+        ghost.classList.add("ghost");
+        ghost.style.left = rect.left + "px";
+        ghost.style.top = rect.top + "px";
+        ghost.style.width = rect.width + "px";
+        ghost.style.height = rect.height + "px";
+        ghost.style.borderRadius = getComputedStyle(btn).borderRadius;
+        ghost.style.background = getComputedStyle(btn).backgroundColor;
 
-        // hide all screens
-        Object.values(screens).forEach((el) => {
-          el.classList.remove("active");
-          el.setAttribute("aria-hidden", "true");
+        document.body.appendChild(ghost);
+
+        // Hide original button during animation
+        btn.style.visibility = "hidden";
+
+        // Turn on Learn background wash immediately
+        learnBg.classList.add("active");
+
+        // Make Learn screen “present” but invisible so we can measure target
+        learn.style.transition = "none";
+        learn.style.opacity = "0";
+        learn.style.transform = "translateY(10px)";
+        learn.classList.add("active");
+        learn.setAttribute("aria-hidden", "false");
+
+        // Force layout so getBoundingClientRect is correct
+        learn.getBoundingClientRect();
+
+        const target = learnHeaderPill.getBoundingClientRect();
+
+        // Restore transitions (after measurement)
+        learn.style.transition = "";
+        
+        // Animate ghost to target pill
+        const duration = 420;
+        ghost.animate([
+          {
+            transform: "translate(0px, 0px)",
+            width: rect.width + "px",
+            height: rect.height + "px",
+            borderRadius: getComputedStyle(btn).borderRadius
+          },
+          {
+            transform: `translate(${(target.left - rect.left)}px, ${(target.top - rect.top)}px)`,
+            width: target.width + "px",
+            height: target.height + "px",
+            borderRadius: "999px"
+          }
+        ], {
+          duration,
+          easing: "cubic-bezier(0.2, 0.9, 0.2, 1)",
+          fill: "forwards"
         });
 
-        // show target
-        target.classList.add("active");
-        target.setAttribute("aria-hidden", "false");
+        // Fade in Learn content near the end
+        setTimeout(() => {
+          // fully switch screens (home off, learn on) now that learn is active
+          home.classList.remove("active");
+          home.setAttribute("aria-hidden", "true");
+
+          learn.style.opacity = "1";
+          learn.style.transform = "translateY(0)";
+        }, duration - 120);
+
+        // Cleanup
+        setTimeout(() => {
+          ghost.remove();
+          btn.style.visibility = "";
+          app.classList.remove("busy");
+        }, duration + 20);
       }
 
-      // handle clicks on anything with data-route
-      document.addEventListener("click", (e) => {
-        const el = e.target.closest("[data-route]");
-        if (!el) return;
-
-        e.preventDefault();
-        const path = el.getAttribute("data-route");
-        show(path, { push: true });
+      // Hook up Learn button
+      document.querySelectorAll("[data-open='learn']").forEach(btn => {
+        btn.addEventListener("click", () => morphButtonToLearnHeader(btn));
       });
 
-      // back/forward buttons
-      window.addEventListener("popstate", () => {
-        show(window.location.pathname, { push: false });
-      });
+      // Back
+      document.querySelectorAll("[data-back]").forEach(a => {
+        a.addEventListener("click", (e) => {
+          e.preventDefault();
 
-      // initial load: if someone lands on /learn directly
-      show(window.location.pathname, { push: false });
+          // simple reverse: remove learn screen & background wash
+          learnBg.classList.remove("active");
+          showHome();
+        });
+      });
     })();
   </script>
 
