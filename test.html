@@ -65,6 +65,8 @@
       color: #2a2a2a;
       background: #fff;
       transition: transform 0.15s ease, box-shadow 0.15s ease;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .choice:hover {
@@ -94,6 +96,25 @@
       font-size: 0.85rem;
       color: #7a746e;
     }
+
+    /* --- Page transition overlay --- */
+    #transition {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      transform: scale(0.2);
+      border-radius: 999px;
+      transition: transform 320ms ease, opacity 120ms ease, border-radius 320ms ease;
+      z-index: 9999;
+      background: transparent;
+    }
+
+    #transition.active {
+      opacity: 1;
+      transform: scale(3);
+      border-radius: 0;
+    }
   </style>
 </head>
 <body>
@@ -103,11 +124,11 @@
     <h1>What would you like to do?</h1>
 
     <div class="choices">
-      <a class="choice learn" href="learn.html">Learn</a>
-      <a class="choice relax" href="relax.html">Relax</a>
-      <a class="choice laugh" href="laugh.html">Laugh</a>
-      <a class="choice wow" href="wow.html">Be wowed</a>
-      <a class="choice surprise" href="surprise.html">Surprise me</a>
+      <a class="choice learn" href="learn.html" data-color="#d8e9ff">Learn</a>
+      <a class="choice relax" href="relax.html" data-color="#dff1e4">Relax</a>
+      <a class="choice laugh" href="laugh.html" data-color="#fff0c9">Laugh</a>
+      <a class="choice wow" href="wow.html" data-color="#f0dbff">Be wowed</a>
+      <a class="choice surprise" href="surprise.html" data-color="#ffe2e2">Surprise me</a>
     </div>
 
     <footer>
@@ -115,6 +136,42 @@
     </footer>
 
   </div>
+
+  <!-- Transition overlay -->
+  <div id="transition"></div>
+
+  <script>
+    (function () {
+      const overlay = document.getElementById("transition");
+
+      function onChoiceClick(e) {
+        const link = e.currentTarget;
+        const href = link.getAttribute("href");
+        const color = link.getAttribute("data-color");
+
+        if (!href || !color) return;
+
+        e.preventDefault();
+
+        // Set overlay color to match the tapped button
+        overlay.style.background = color;
+
+        // Trigger animation
+        requestAnimationFrame(() => {
+          overlay.classList.add("active");
+        });
+
+        // Navigate after the animation
+        setTimeout(() => {
+          window.location.href = href;
+        }, 320);
+      }
+
+      document.querySelectorAll(".choice").forEach((a) => {
+        a.addEventListener("click", onChoiceClick);
+      });
+    })();
+  </script>
 
 </body>
 </html>
