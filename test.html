@@ -35,7 +35,6 @@
       overflow: hidden;
     }
 
-    /* App frame */
     .app {
       width: 100%;
       max-width: 520px;
@@ -44,24 +43,15 @@
       position: relative;
     }
 
-    h1, h2 {
+    h1 {
       font-family: "Fraunces", serif;
+      font-size: 2.2rem;
       font-weight: 500;
       line-height: 1.2;
+      margin: 0 0 2.75rem;
       letter-spacing: -0.01em;
-      margin: 0;
     }
 
-    h1 { font-size: 2.2rem; margin-bottom: 2.75rem; }
-    h2 { font-size: 2.1rem; margin-bottom: 0.75rem; }
-
-    .subtitle {
-      font-size: 1rem;
-      color: #405a7a;
-      margin: 0 0 2.5rem;
-    }
-
-    /* Home choices */
     .choices {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -78,10 +68,10 @@
       font-size: 1.05rem;
       font-weight: 500;
       color: var(--ink);
-      border: 0;
       transition: transform 0.15s ease, box-shadow 0.15s ease;
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
+      border: 0;
     }
 
     .choice:hover { box-shadow: 0 10px 28px rgba(0,0,0,0.08); }
@@ -107,7 +97,45 @@
       color: var(--muted);
     }
 
-    /* Learn topics */
+    /* --- Overlay panel system --- */
+    .panel {
+      position: fixed;
+      inset: 0;
+      transform: translateY(12px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 220ms ease, transform 220ms ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1.5rem;
+    }
+
+    .panel.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .panel-inner {
+      width: 100%;
+      max-width: 520px;
+      text-align: center;
+    }
+
+    .panel h2 {
+      font-family: "Fraunces", serif;
+      font-size: 2rem;
+      font-weight: 500;
+      margin: 0 0 0.75rem;
+    }
+
+    .panel p {
+      margin: 0 0 2.5rem;
+      color: rgba(42,42,42,0.75);
+      font-size: 1rem;
+    }
+
     .topics {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -126,7 +154,6 @@
       color: var(--ink);
       background: rgba(255,255,255,0.55);
       transition: transform 0.15s ease, box-shadow 0.15s ease;
-      -webkit-tap-highlight-color: transparent;
     }
 
     .topic:hover { box-shadow: 0 10px 28px rgba(0,0,0,0.08); }
@@ -135,149 +162,95 @@
     .back {
       display: inline-block;
       margin-top: 3rem;
-      font-size: 0.95rem;
-      color: #405a7a;
+      padding: 0.65rem 1.1rem;
+      border-radius: 999px;
+      border: 1px solid rgba(42,42,42,0.25);
+      color: var(--ink);
       text-decoration: none;
-    }
-    .back:hover { text-decoration: underline; }
-
-    /* SPA screen transitions */
-    .screen {
-      position: absolute;
-      inset: 0;
-      padding: 2.5rem 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transform: translateY(10px);
-      pointer-events: none;
-      transition: opacity 240ms ease, transform 240ms ease;
-    }
-    .screen.active {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
+      background: rgba(255,255,255,0.35);
     }
 
-    /* Background color per route (smoothly) */
-    body.route-home { background: var(--bg); transition: background 240ms ease; }
-    body.route-learn { background: var(--learn); transition: background 240ms ease; }
+    .back:hover { border-color: rgba(42,42,42,0.4); }
 
-    /* inner containers inside screens */
-    .inner {
-      width: 100%;
-      max-width: 520px;
-      text-align: center;
-    }
+    /* Specific panel backgrounds */
+    #panel-learn { background: var(--learn); }
   </style>
 </head>
-<body class="route-home">
+<body>
 
-  <div class="app">
+  <!-- HOME -->
+  <div class="app" id="home">
+    <h1>What would you like to do?</h1>
 
-    <!-- HOME SCREEN -->
-    <section id="screen-home" class="screen active" aria-hidden="false">
-      <div class="inner">
-        <h1>What would you like to do?</h1>
+    <div class="choices">
+      <button class="choice learn" data-open="learn">Learn</button>
+      <button class="choice relax" data-open="relax">Relax</button>
+      <button class="choice laugh" data-open="laugh">Laugh</button>
+      <button class="choice wow" data-open="wow">Be wowed</button>
+      <button class="choice surprise" data-open="surprise">Surprise me</button>
+    </div>
 
-        <div class="choices">
-          <button class="choice learn" data-route="/learn">Learn</button>
-          <button class="choice relax" data-route="/relax">Relax</button>
-          <button class="choice laugh" data-route="/laugh">Laugh</button>
-          <button class="choice wow" data-route="/wow">Be wowed</button>
-          <button class="choice surprise" data-route="/surprise">Surprise me</button>
-        </div>
+    <footer>
+      A few good things. Then you’re done.
+    </footer>
+  </div>
 
-        <footer>A few good things. Then you’re done.</footer>
+  <!-- LEARN PANEL -->
+  <div class="panel" id="panel-learn" aria-hidden="true">
+    <div class="panel-inner">
+      <h2>What would you like to learn?</h2>
+      <p>One small thing. No pressure.</p>
+
+      <div class="topics">
+        <a class="topic" href="#">Music</a>
+        <a class="topic" href="#">Maths</a>
+        <a class="topic" href="#">Science</a>
+        <a class="topic" href="#">History</a>
+        <a class="topic" href="#">Geography</a>
+        <a class="topic" href="#">Design</a>
       </div>
-    </section>
 
-    <!-- LEARN SCREEN -->
-    <section id="screen-learn" class="screen" aria-hidden="true">
-      <div class="inner">
-        <h2>What would you like to learn?</h2>
-        <p class="subtitle">One small thing. No pressure.</p>
-
-        <div class="topics">
-          <a class="topic" href="#" data-topic="music">Music</a>
-          <a class="topic" href="#" data-topic="maths">Maths</a>
-          <a class="topic" href="#" data-topic="science">Science</a>
-          <a class="topic" href="#" data-topic="history">History</a>
-          <a class="topic" href="#" data-topic="geography">Geography</a>
-          <a class="topic" href="#" data-topic="design">Design</a>
-        </div>
-
-        <a class="back" href="#" data-route="/">← Back</a>
-      </div>
-    </section>
-
-    <!-- Placeholder screens so buttons don’t 404 -->
-    <section id="screen-placeholder" class="screen" aria-hidden="true">
-      <div class="inner">
-        <h2>Coming soon</h2>
-        <p class="subtitle">This section isn’t built yet.</p>
-        <a class="back" href="#" data-route="/">← Back</a>
-      </div>
-    </section>
-
+      <a class="back" href="#" data-close>← Back</a>
+    </div>
   </div>
 
   <script>
     (function () {
-      const screens = {
-        "/": document.getElementById("screen-home"),
-        "/learn": document.getElementById("screen-learn"),
-        "/relax": document.getElementById("screen-placeholder"),
-        "/laugh": document.getElementById("screen-placeholder"),
-        "/wow": document.getElementById("screen-placeholder"),
-        "/surprise": document.getElementById("screen-placeholder"),
+      const panels = {
+        learn: document.getElementById("panel-learn"),
+        // relax, laugh, wow, surprise can be added the same way
       };
 
-      function setBodyRouteClass(path) {
-        document.body.classList.remove("route-home", "route-learn");
-        if (path === "/learn") document.body.classList.add("route-learn");
-        else document.body.classList.add("route-home");
+      function openPanel(name) {
+        const panel = panels[name];
+        if (!panel) return;
+        panel.classList.add("active");
+        panel.setAttribute("aria-hidden", "false");
+        // Optional: prevent background scroll (already hidden on body)
       }
 
-      function show(path, { push = false } = {}) {
-        const target = screens[path] || screens["/"];
-        const finalPath = screens[path] ? path : "/";
-
-        // update URL (no reload)
-        if (push) history.pushState({ path: finalPath }, "", finalPath);
-
-        // switch body background theme
-        setBodyRouteClass(finalPath);
-
-        // hide all screens
-        Object.values(screens).forEach((el) => {
-          el.classList.remove("active");
-          el.setAttribute("aria-hidden", "true");
+      function closePanels() {
+        Object.values(panels).forEach(p => {
+          p.classList.remove("active");
+          p.setAttribute("aria-hidden", "true");
         });
-
-        // show target
-        target.classList.add("active");
-        target.setAttribute("aria-hidden", "false");
       }
 
-      // handle clicks on anything with data-route
-      document.addEventListener("click", (e) => {
-        const el = e.target.closest("[data-route]");
-        if (!el) return;
-
-        e.preventDefault();
-        const path = el.getAttribute("data-route");
-        show(path, { push: true });
+      document.querySelectorAll("[data-open]").forEach(btn => {
+        btn.addEventListener("click", () => openPanel(btn.getAttribute("data-open")));
       });
 
-      // back/forward buttons
-      window.addEventListener("popstate", () => {
-        show(window.location.pathname, { push: false });
+      document.querySelectorAll("[data-close]").forEach(el => {
+        el.addEventListener("click", (e) => {
+          e.preventDefault();
+          closePanels();
+        });
       });
 
-      // initial load: if someone lands on /learn directly
-      show(window.location.pathname, { push: false });
+      // Escape key closes any open panel
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closePanels();
+      });
     })();
   </script>
 
